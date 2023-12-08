@@ -1,19 +1,13 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:get/get.dart';
+import '../../controller/Home/HomeController.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+class Home extends StatelessWidget {
+  final HomeController controller = Get.put(HomeController());
 
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  InAppWebViewController? webViewController;
-  PullToRefreshController? refreshController;
-  var initialUrl = "https://invoport.com/";
-  double _progress = 0;
-
+  Home({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +18,10 @@ class _HomeState extends State<Home> {
         actions: [
           IconButton(
             onPressed: () {
-              webViewController?.reload();
+              controller.reloadWebView();
+
             },
-            icon: Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh),
           ),
         ],
       ),
@@ -35,21 +30,22 @@ class _HomeState extends State<Home> {
           Expanded(
             child: InAppWebView(
               initialUrlRequest: URLRequest(
-                url: Uri.parse(initialUrl),
+                url: Uri.parse(controller.initialUrl),
               ),
               onWebViewCreated: (controller) {
-                webViewController = controller;
+                Get.find<HomeController>().webViewController = controller;
               },
-              pullToRefreshController: refreshController,
+              pullToRefreshController:
+                  Get.find<HomeController>().refreshController,
               onProgressChanged: (controller, progress) {
-                setState(() {
-                  _progress = progress / 100;
-                });
+                Get.find<HomeController>().progress.value = progress / 100;
               },
             ),
           ),
-          LinearProgressIndicator(
-            value: _progress,
+          Obx(
+            () => LinearProgressIndicator(
+              value: controller.progress.value,
+            ),
           ),
         ],
       ),

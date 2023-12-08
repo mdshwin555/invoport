@@ -1,17 +1,12 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:invtest2/UI/screens/Home.dart';
+import 'package:invtest2/UI/screens/login.dart';
+import 'constance/routes.dart';
 
-import 'UI/screens/login.dart';
-import 'UI/screens/screen1.dart';
+List<GetPage<dynamic>>? routes = [
+  // Auth
+  GetPage(name: AppRoute.signIn, page: () => const LogIn()),
 
-
-class AppRoute{
-Route ?generateRoute(RouteSettings settings){
-  switch(settings.name){
-    case'/':
-      return MaterialPageRoute(builder: (_)=>ScreenOne());
-    case'Log':
-      return MaterialPageRoute(builder: (_)=>LogIn());
-  }
-}
-}
+  // Home
+  GetPage(name: AppRoute.home, page: () =>  Home()),
+];
